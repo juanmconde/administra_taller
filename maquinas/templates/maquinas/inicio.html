@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1>Administración de Taller</h1>
+
+    <!-- Menú principal -->
+    <nav>
+        <ul>
+            <li><a href="{% url 'registrar_cliente' %}">Registrar Cliente</a></li>
+            <li><a href="{% url 'buscar_cliente' %}">Buscar Cliente</a></li>
+            <li><a href="{% url 'registrar_reparacion' cliente_id=1 %}">Registrar Reparación</a></li>
+            <li><a href="{% url 'lista_reparaciones' %}">Listar Reparaciones</a></li>
+        </ul>
+    </nav>
+
+    <!-- Lista de clientes -->
+    <h2>Lista de Clientes</h2>
+    <form method="get" action="{% url 'buscar_cliente' %}">
+        <input type="text" name="q" placeholder="Buscar cliente">
+        <button type="submit">Buscar</button>
+    </form>
+    <ul>
+        {% for cliente in clientes %}
+        <li>
+            {{ cliente.nombre }} {{ cliente.apellido }}
+            <a href="{% url 'registrar_reparacion' cliente_id=cliente.id %}">Nueva Reparación</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

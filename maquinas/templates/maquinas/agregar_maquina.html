@@ -1,0 +1,6 @@
+<h2>Agregar Máquina para {{ cliente.nombre }} {{ cliente.apellido }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar Máquina</button>
+</form>

@@ -1,0 +1,188 @@
+/* General */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* Contenedor principal */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Información adicional */
+.info {
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+/* Encabezado */
+h1 {
+  text-align: center;
+  color: #444;
+  margin-top: 20px;
+}
+
+/* Formularios */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px auto;
+  padding: 10px;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 500px;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="date"],
+form textarea,
+form select {
+  width: 90%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+form button {
+  padding: 10px 20px;
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #4cae4c;
+}
+
+/* Listas */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  padding: 10px;
+  background: #fff;
+  margin: 10px auto;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+}
+
+ul li:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+ul li a {
+  text-decoration: none;
+  color: #007bff;
+  margin-left: 10px;
+  transition: color 0.3s ease;
+}
+
+ul li a:hover {
+  color: #0056b3;
+}
+
+/* Botones de acción */
+button {
+  padding: 8px 15px;
+  margin-left: 5px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.eliminar {
+  background-color: #d9534f;
+  color: white;
+}
+
+button.eliminar:hover {
+  background-color: #c9302c;
+}
+
+button.registrar {
+  background-color: #0275d8;
+  color: white;
+}
+
+button.registrar:hover {
+  background-color: #025aa5;
+}
+
+/* Botones */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  background-color: #5cb85c; /* Verde */
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #4cae4c; /* Verde más oscuro */
+}
+
+.btn-secondary {
+  background-color: #007bff; /* Azul */
+}
+
+.btn-secondary:hover {
+  background-color: #0056b3; /* Azul más oscuro */
+}
+
+/* Enlaces */
+a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #0056b3;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  ul li {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+
+  form {
+      width: 90%;
+  }
+}

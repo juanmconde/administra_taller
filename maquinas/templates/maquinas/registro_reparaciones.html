@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Reparación</title>
+</head>
+<body>
+    <h1>Registrar Reparación</h1>
+    <p>Cliente: {{ cliente.nombre }} {{ cliente.apellido }}</p>
+    <p>Máquina: {{ maquinas.first.tipo }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ reparacion_form.as_p }}
+        <h2>Detalles</h2>
+        <table>
+            <tr>
+                <th>Cantidad</th>
+                <th>Descripción</th>
+                <th>Total</th>
+            </tr>
+            {% for form in detalle_formset %}
+                <tr>
+                    <td>{{ form.cantidad }}</td>
+                    <td>{{ form.descripcion }}</td>
+                    <td>{{ form.total }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <button type="submit">Guardar Reparación</button>
+    </form>
+</body>
+</html>

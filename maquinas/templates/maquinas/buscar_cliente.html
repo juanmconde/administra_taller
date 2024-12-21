@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Cliente</title>
+</head>
+<body>
+    <h1>Buscar Cliente</h1>
+    <form method="get" action="">
+        <label for="q">Buscar:</label>
+        <input id="q" type="text" name="q" placeholder="Apellido, Nombre o Teléfono">
+        <button type="submit">Buscar</button>
+    </form>
+    <ul>
+        {% if clientes %}
+            {% for cliente in clientes %}
+                <li>
+                    {{ cliente.apellido }}, {{ cliente.nombre }} - Tel: {{ cliente.telefono }}
+                </li>
+            {% endfor %}
+        {% else %}
+            <li>No se encontraron resultados.</li>
+        {% endif %}
+    </ul>
+    <a href="{% url 'lista_maquinas' %}" class="btn btn-secondary">Volver al Inicio</a>
+</body>
+</html>

@@ -1,13 +1,14 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Máquinas</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
     <h1>Lista de Máquinas</h1>
-    <a href="{% url 'registrar_maquina' %}">Registrar Máquina</a>
     <table>
         <thead>
             <tr>
@@ -15,20 +16,20 @@
                 <th>Tipo</th>
                 <th>Problema</th>
                 <th>Fecha de Entrada</th>
-                <th>ID Único</th>
             </tr>
         </thead>
         <tbody>
             {% for maquina in maquinas %}
             <tr>
-                <td>{{ maquina.cliente }}</td>
+                <td>{{ maquina.cliente.nombre }}</td>
                 <td>{{ maquina.tipo }}</td>
                 <td>{{ maquina.problema }}</td>
                 <td>{{ maquina.fecha_entrada }}</td>
-                <td>{{ maquina.id_unico }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <a href="{% url 'inicio' %}" class="btn btn-primary">Inicio</a>
+
 </body>
 </html>

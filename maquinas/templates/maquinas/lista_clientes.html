@@ -1,37 +1,26 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Clientes</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="/static/css/styles.css">
 
 </head>
 <body>
     <h1>Lista de Clientes</h1>
-    <a href="{% url 'registrar_cliente' %}">Registrar Cliente</a>
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Teléfono</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="centrar-contenido">
+        <ul>
             {% for cliente in clientes %}
-            <tr>
-                <td>{{ cliente.nombre }}</td>
-                <td>{{ cliente.apellido }}</td>
-                <td>{{ cliente.telefono }}</td>
-                <td>
-                    <a href="{% url 'eliminar_cliente' cliente.id %}">Eliminar</a>
-                </td>
-            </tr>
+            <li>
+                {{ cliente.apellido }}, {{ cliente.nombre }} - Tel: {{ cliente.telefono }}
+                <a href="{% url 'eliminar_cliente' cliente.pk %}">Eliminar</a>
+                <a href="{% url 'registrar_reparacion' cliente.pk %}">Registrar Reparación</a>
+            </li>
             {% endfor %}
-        </tbody>
-    </table>
+        </ul>
+        <a href="{% url 'registrar_cliente' %}" class="btn btn-primary">Registrar Nuevo Cliente</a>
+        <a href="{% url 'inicio' %}" class="btn btn-primary">Inicio</a>
+    </div>
 </body>
 </html>

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Cliente</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+
 </head>
 <body>
     <h1>Buscar Cliente</h1>
@@ -11,6 +13,8 @@
         <label for="q">Buscar:</label>
         <input id="q" type="text" name="q" placeholder="Apellido, Nombre o Teléfono">
         <button type="submit">Buscar</button>
+        <a href="{% url 'inicio' %}" class="btn btn-primary">Inicio</a>
+
     </form>
     <ul>
         {% if clientes %}
@@ -23,6 +27,6 @@
             <li>No se encontraron resultados.</li>
         {% endif %}
     </ul>
-    <a href="{% url 'lista_maquinas' %}" class="btn btn-secondary">Volver al Inicio</a>
+    <a href="{% url 'lista_clientes' %}">Volver a la lista de clientes</a>
 </body>
 </html>

@@ -1,73 +1,89 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
-from reportlab.pdfgen import canvas
+from django.contrib import messages
+from .forms import ClienteForm, MaquinaForm, ReparacionForm, DetalleReparacionFormSet
 from .models import Cliente, Maquina, Reparacion
-from .forms import ClienteForm, MaquinaForm, ReparacionForm
 
-def lista_clientes(request):
-    clientes = Cliente.objects.all()
-    return render(request, "maquinas/lista_clientes.html", {"clientes": clientes})
+
+def inicio(request):
+    return render(request, "maquinas/inicio.html")
+
+def lista_maquinas(request):
+    maquinas = Maquina.objects.all()
+    return render(request, 'maquinas/lista_maquinas.html', {'maquinas': maquinas})
 
 def registrar_cliente(request):
     if request.method == "POST":
-        form = ClienteForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("lista_clientes")
+        cliente_form = ClienteForm(request.POST)
+        maquina_form = MaquinaForm(request.POST)
+        if cliente_form.is_valid() and maquina_form.is_valid():
+            cliente, _ = Cliente.objects.get_or_create(
+                telefono=cliente_form.cleaned_data["telefono"],
+                defaults={
+                    "nombre": cliente_form.cleaned_data["nombre"],
+                    "apellido": cliente_form.cleaned_data["apellido"],
+                },
+            )
+            maquina = maquina_form.save(commit=False)
+            maquina.cliente = cliente
+            maquina.save()
+            messages.success(request, "Cliente y máquina registrados correctamente.")
+            return redirect("inicio")
     else:
-        form = ClienteForm()
-    return render(request, "maquinas/agregar_cliente.html", {"form": form})
+        cliente_form = ClienteForm()
+        maquina_form = MaquinaForm()
 
+    return render(
+        request, "maquinas/registro_cliente.html",
+        {"cliente_form": cliente_form, "maquina_form": maquina_form}
+    )
 
-def registrar_maquina(request):
-    if request.method == "POST":
-        form = MaquinaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("lista_maquinas")
-    else:
-        form = MaquinaForm()
-    return render(request, "agregar_maquina.html", {"form": form})
-
-def buscar_cliente(request):
-    query = request.GET.get("q", "")
-    clientes = Cliente.objects.filter(nombre__icontains=query)
-    return render(request, "buscar_cliente.html", {"clientes": clientes})
+def lista_clientes(request):
+    clientes = Cliente.objects.prefetch_related('maquinas').all()
+    return render(request, "maquinas/lista_clientes.html", {"clientes": clientes})
 
 def eliminar_cliente(request, pk):
     cliente = get_object_or_404(Cliente, pk=pk)
     cliente.delete()
+    messages.success(request, "Cliente eliminado correctamente.")
     return redirect("lista_clientes")
 
-def lista_maquinas(request):
-    maquinas = Maquina.objects.all()
-    return render(request, "lista_maquinas.html", {"maquinas": maquinas})
+def buscar_cliente(request):
+    query = request.GET.get("q", "")
+    clientes = Cliente.objects.filter(
+        Q(apellido__icontains=query) | Q(nombre__icontains=query) | Q(telefono__icontains=query)
+    ) if query else []
+    return render(request, "maquinas/buscar_cliente.html", {"clientes": clientes})
 
+def registrar_reparacion(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    maquinas = Maquina.objects.filter(cliente=cliente)
+
+    if request.method == "POST":
+        reparacion_form = ReparacionForm(request.POST)
+        formset = DetalleReparacionFormSet(request.POST)
+
+        if reparacion_form.is_valid() and formset.is_valid():
+            reparacion = reparacion_form.save(commit=False)
+            reparacion.maquina = maquinas.first()  # Puedes ajustar esto si es necesario.
+            reparacion.save()
+
+            for form in formset:
+                detalle = form.save(commit=False)
+                detalle.reparacion = reparacion
+                detalle.save()
+
+            messages.success(request, "Reparación registrada correctamente.")
+            return redirect("lista_reparaciones")
+    else:
+        reparacion_form = ReparacionForm()
+        formset = DetalleReparacionFormSet()
+
+    return render(
+        request,
+        "registro_reparacion.html",
+        {"reparacion_form": reparacion_form, "formset": formset, "cliente": cliente},
+    )
+    
 def lista_reparaciones(request):
-    reparaciones = Reparacion.objects.all()
-    return render(request, "lista_reparaciones.html", {"reparaciones": reparaciones})
-
-def imprimir_reparacion(request, pk):
-    reparacion = get_object_or_404(Reparacion, pk=pk)
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="reparacion_{pk}.pdf"'
-    p = canvas.Canvas(response)
-
-    # Encabezado
-    p.setFont("Helvetica-Bold", 16)
-    p.drawString(100, 800, "Reporte de Reparación")
-
-    # Información de la reparación
-    p.setFont("Helvetica", 12)
-    p.drawString(100, 770, f"Cliente: {reparacion.maquina.cliente.nombre} {reparacion.maquina.cliente.apellido}")
-    p.drawString(100, 750, f"Máquina: {reparacion.maquina.tipo} - {reparacion.maquina.marca}")
-    p.drawString(100, 730, f"Modelo: {reparacion.maquina.modelo}")
-    p.drawString(100, 710, f"Problema reportado: {reparacion.problema_reportado}")
-    p.drawString(100, 690, f"Solución: {reparacion.solucion}")
-    p.drawString(100, 670, f"Fecha de ingreso: {reparacion.fecha_ingreso.strftime('%Y-%m-%d')}")
-    p.drawString(100, 650, f"Costo: ${reparacion.costo:.2f}")
-
-    # Finaliza el PDF
-    p.showPage()
-    p.save()
-    return response
+    reparaciones = Reparacion.objects.select_related('maquina').all()
+    return render(request, "maquinas/lista_reparaciones.html", {"reparaciones": reparaciones})

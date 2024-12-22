@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Máquina</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+
 </head>
 <body>
     <h1>Crear Nueva Máquina</h1>
@@ -13,5 +15,7 @@
         <button type="submit">Guardar</button>
     </form>
     <a href="{% url 'lista_maquinas' %}">Volver a la lista</a>
+    <a href="{% url 'inicio' %}" class="btn btn-primary">Inicio</a>
+
 </body>
 </html>

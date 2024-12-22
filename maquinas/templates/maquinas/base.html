@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mi Proyecto{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <nav style="text-align: center; margin-bottom: 20px;">
+        <a href="{% url 'inicio' %}">Inicio</a>
+        <a href="{% url 'lista_clientes' %}">Clientes</a>
+        <a href="{% url 'registrar_cliente' %}">Registrar Cliente</a>
+        <a href="{% url 'lista_reparaciones' %}">Reparaciones</a>
+    </nav>
+    <div style="text-align: center;">
+        {% block content %}
+        <!-- Contenido específico de cada página -->
+        {% endblock %}
+    </div>
+</body>
+</html>

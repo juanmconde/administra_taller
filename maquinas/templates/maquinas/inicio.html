@@ -11,14 +11,13 @@
     <h1>Lista de Clientes</h1>
     <!-- Formulario de búsqueda -->
     <form method="get" action="{% url 'lista_clientes' %}">
-        <a href="{% url 'registrar_cliente' %}">Registrar Cliente</a>
-
         <label for="q">Buscar cliente:</label>
         <input id="q" type="text" name="q" placeholder="Buscar por apellido, nombre o teléfono" value="{{ query }}">
         <button type="submit">Buscar</button> 
+        <a href="{% url 'registrar_cliente' %}" class="btn btn-primary">Registrar Cliente</a>
         <a href="{% url 'lista_clientes' %}" class="btn btn-secondary">Ver Clientes</a>
         <a href="{% url 'lista_maquinas' %}" class="btn btn-secondary">Ver Máquinas</a>
-       
+        <a href="{% url 'registrar_cliente' %}">Registrar Cliente</a>
     </form>
     <ul>
         {% if clientes %}

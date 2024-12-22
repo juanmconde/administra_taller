@@ -23,29 +23,32 @@ class Maquina(models.Model):
         related_name="maquinas",
         default=cliente_generico,
     )
-    tipo = models.CharField(max_length=100)
+    maquina = models.CharField(max_length=100)
     problema = models.TextField()
     fecha_entrada = models.DateField(default=date.today)
     id_unico = models.CharField(max_length=255, unique=True, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.tipo} ({self.id_unico})"
+        return f"{self.maquina} ({self.id_unico})"
+    
+    def problema_corto(self):
+        return self.problema[:50] + "..." if len(self.problema) > 50 else self.problema
 
 class Reparacion(models.Model):
-    maquina = models.ForeignKey(Maquina, on_delete=models.CASCADE, related_name="reparaciones")
-    fecha = models.DateField(default=date.today)
-    mano_obra = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    total = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    observaciones = models.TextField(blank=True, null=True)
-
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    maquina = models.ForeignKey(Maquina, on_delete=models.CASCADE)
+    fecha = models.DateField()
+    mano_obra = models.DecimalField(max_digits=10, decimal_places=2)
+    observaciones = models.TextField()
+    # Si tienes más campos, agrégalos aquí
     def __str__(self):
-        return f"Reparación de {self.maquina.tipo} - {self.fecha}"
+        return f"Reparación de {self.maquina.maquina} - {self.fecha}"  # pylint: disable=no-member
 
 class DetalleReparacion(models.Model):
     reparacion = models.ForeignKey('Reparacion', on_delete=models.CASCADE, related_name='detalles')
     cantidad = models.PositiveIntegerField(default=1)
     descripcion = models.CharField(max_length=255)
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    precio = models.DecimalField(max_digits=10, decimal_places=1)
 
     def subtotal(self):
         return self.cantidad * self.precio

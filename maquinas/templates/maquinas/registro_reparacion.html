@@ -1,64 +1,29 @@
-<form method="post">
-    {% csrf_token %}
-    {{ reparacion_form.as_p }}
-    <table id="detalle-reparacion">
-        <thead>
-            <tr>
-                <th>Cantidad</th>
-                <th>Descripción</th>
-                <th>Precio ($)</th>
-                <th>Subtotal</th>
-                <th>Eliminar</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for form in formset %}
-            <tr>
-                <td>{{ form.cantidad }}</td>
-                <td>{{ form.descripcion }}</td>
-                <td>{{ form.precio }}</td>
-                <td class="subtotal"></td>
-                <td><button type="button" class="delete-row">X</button></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <button type="button" id="add-row">Agregar Fila</button>
-    <p>Mano de Obra: {{ reparacion_form.mano_de_obra }}</p>
-    <p>Observaciones: {{ reparacion_form.observaciones }}</p>
-    <p>Fecha: {{ reparacion_form.fecha }}</p>
-    <p>Total: <span id="total"></span></p>
-    <button type="submit">Guardar</button>
-</form>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const table = document.querySelector("#detalle-reparacion tbody");
-        const addRow = document.querySelector("#add-row");
-        const totalField = document.querySelector("#total");
-
-        addRow.addEventListener("click", () => {
-            const newRow = table.rows[0].cloneNode(true);
-            table.appendChild(newRow);
-        });
-
-        table.addEventListener("input", () => {
-            let total = 0;
-            Array.from(table.rows).forEach(row => {
-                const cantidad = row.querySelector("input[name$='cantidad']").value || 0;
-                const precio = row.querySelector("input[name$='precio']").value || 0;
-                const subtotal = row.querySelector(".subtotal");
-                const rowTotal = cantidad * precio;
-                subtotal.textContent = rowTotal.toFixed(2);
-                total += rowTotal;
-            });
-            totalField.textContent = total.toFixed(2);
-        });
-
-        table.addEventListener("click", (e) => {
-            if (e.target.classList.contains("delete-row")) {
-                e.target.closest("tr").remove();
-            }
-        });
-    });
-</script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Reparación</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <h1>Registrar Reparación</h1>
+    <div class="centrar-contenido">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            {{ formset.management_form }}
+            <h2>Detalles de Reparación</h2>
+            <table>
+                {% for form in formset %}
+                    <tr>
+                        <td>{{ form.as_p }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <button type="submit">Guardar</button>
+        </form>
+        <a href="{% url 'inicio' %}" class="btn btn-secondary">Inicio</a>
+    </div>
+</body>
+</html>

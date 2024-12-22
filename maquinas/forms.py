@@ -2,6 +2,7 @@ from django import forms
 from django.forms import formset_factory
 from .models import Cliente, Maquina, Reparacion, DetalleReparacion
 
+
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
@@ -12,24 +13,58 @@ class ClienteForm(forms.ModelForm):
             "telefono": forms.TextInput(attrs={"class": "form-control"}),
         }
 
+
 class MaquinaForm(forms.ModelForm):
     class Meta:
         model = Maquina
-        fields = ["tipo", "problema", "fecha_entrada"]
+        fields = ["maquina", "problema", "fecha_entrada"]
         widgets = {
-            "tipo": forms.TextInput(attrs={"class": "form-control"}),
-            "problema": forms.Textarea(attrs={"class": "form-control"}),
-            "fecha_entrada": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "maquina": forms.TextInput(attrs={"class": "form-control"}),
+            "problema": forms.Textarea(attrs={"rows": 3, "cols": 40}),
+            "fecha_entrada": forms.DateInput(
+                attrs={"class": "form-control", "type": "date"}
+            ),
         }
 
-class ReparacionForm(forms.ModelForm):
-    class Meta:
-        model = Reparacion
-        fields = ['mano_obra', 'observaciones', 'fecha', 'maquina', 'total']
 
 class DetalleReparacionForm(forms.ModelForm):
     class Meta:
         model = DetalleReparacion
-        fields = ['cantidad', 'descripcion', 'precio']
+        fields = ["descripcion", "cantidad", "precio"]
 
-DetalleReparacionFormSet = formset_factory(DetalleReparacionForm, extra=10, can_delete=True)
+    def clean(self):
+        cleaned_data = super().clean()
+        descripcion = cleaned_data.get("descripcion")
+        cantidad = cleaned_data.get("cantidad")
+        precio = cleaned_data.get("precio")
+
+        if not descripcion:
+            raise forms.ValidationError("La descripción no puede estar vacía.")
+        if not cantidad or cantidad <= 0:
+            raise forms.ValidationError("La cantidad debe ser mayor a 0.")
+        if not precio or precio <= 0:
+            raise forms.ValidationError("El precio debe ser mayor a 0.")
+        return cleaned_data
+
+
+class DetalleReparacionForm(forms.ModelForm):
+    class Meta:
+        model = DetalleReparacion
+        fields = ["cantidad", "descripcion", "precio"]
+
+
+DetalleReparacionFormSet = formset_factory(
+    DetalleReparacionForm, extra=10, can_delete=True
+)
+
+
+class ReparacionForm(forms.ModelForm):
+    class Meta:
+        model = Reparacion
+        fields = [
+            "cliente",
+            "maquina",
+            "fecha",
+            "mano_obra",
+            "observaciones",
+        ]  # Asegúrate de incluir solo los campos válidos

@@ -12,4 +12,7 @@ urlpatterns = [
     path('lista_reparaciones/', views.lista_reparaciones, name='lista_reparaciones'),
     path("registrar_cliente_maquina/", views.registrar_cliente_maquina, name="registrar_cliente_maquina"),
     path("agregar_maquina_cliente/", views.agregar_maquina_cliente, name="agregar_maquina_cliente"),
+    path("cliente/<int:cliente_id>/", views.detalle_cliente, name="detalle_cliente"),
+    path('registrar_maquina/<int:cliente_id>/', views.registrar_maquina, name='registrar_maquina'),
+    path("editar_cliente/<int:cliente_id>/", views.editar_cliente, name="editar_cliente"),
 ]

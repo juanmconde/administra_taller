@@ -4,6 +4,31 @@ from .forms import ReparacionForm, ClienteForm, MaquinaForm, DetalleReparacionFo
 from django.contrib import messages
 
 
+def editar_cliente(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    if request.method == "POST":
+        form = ClienteForm(request.POST, instance=cliente)
+        if form.is_valid():
+            form.save()
+            return redirect("lista_clientes")
+    else:
+        form = ClienteForm(instance=cliente)
+    return render(request, "maquinas/editar_cliente.html", {"form": form})
+
+def registrar_maquina(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    if request.method == "POST":
+        form = MaquinaForm(request.POST)
+        if form.is_valid():
+            maquina = form.save(commit=False)
+            maquina.cliente = cliente
+            maquina.save()
+            return redirect('lista_clientes')  # Cambia esto si necesitas redirigir a otro lugar
+    else:
+        form = MaquinaForm()
+
+    return render(request, 'maquinas/registrar_maquina.html', {'form': form, 'cliente': cliente})
+
 def agregar_maquina_cliente(request):
     if request.method == "POST":
         maquina_form = MaquinaForm(request.POST)
@@ -149,3 +174,19 @@ def lista_reparaciones(request):
     return render(
         request, "maquinas/lista_reparaciones.html", {"reparaciones": reparaciones}
     )
+
+def detalle_cliente(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    maquinas = cliente.maquinas.all()  # Relación inversa para obtener las máquinas del cliente
+
+    if request.method == "POST":
+        form = MaquinaForm(request.POST)
+        if form.is_valid():
+            maquina = form.save(commit=False)
+            maquina.cliente = cliente  # Asociar la nueva máquina al cliente
+            maquina.save()
+            return redirect("detalle_cliente", cliente_id=cliente.id)
+    else:
+        form = MaquinaForm()
+
+    return render(request, "detalle_cliente.html", {"cliente": cliente, "maquinas": maquinas, "form": form})

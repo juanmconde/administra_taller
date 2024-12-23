@@ -1,0 +1,17 @@
+<h1>Detalle del Cliente: {{ cliente.nombre }} {{ cliente.apellido }}</h1>
+
+<h2>Máquinas Registradas</h2>
+<ul>
+    {% for maquina in maquinas %}
+        <li>{{ maquina.maquina }} - Problema: {{ maquina.problema }}</li>
+    {% endfor %}
+</ul>
+
+<h2>Agregar Nueva Máquina</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Agregar Máquina</button>
+</form>
+
+<a href="{% url 'lista_clientes' %}">Volver a la lista de clientes</a>

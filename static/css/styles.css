@@ -264,3 +264,25 @@ table th {
 .btn {
   margin: 5px; /* Espaciado entre los botones */
 }
+table {
+  width: 60%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 6px;
+  text-align: left;
+}
+
+table th {
+  background-color: #f2f2f2;
+}
+
+td:nth-child(1), td:nth-child(2) { /* Ancho personalizado para nombre y apellido */
+  width: 30%; /* Ajusta este valor según tus necesidades */
+}
+
+td:nth-child(3) { /* Teléfono */
+  width: 20%;
+}

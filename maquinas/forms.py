@@ -1,8 +1,14 @@
 from django import forms
-from django.forms import formset_factory
+from django.forms import formset_factory, inlineformset_factory
 from .models import Cliente, Maquina, Reparacion, DetalleReparacion
 
-
+DetalleReparacionFormSet = inlineformset_factory(
+    Reparacion,
+    DetalleReparacion,
+    fields=["cantidad", "descripcion", "precio"],
+    extra=1,
+    can_delete=True
+)
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente

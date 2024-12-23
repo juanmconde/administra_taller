@@ -53,43 +53,29 @@ def registrar_cliente_maquina(request):
     )
 
 def registrar_reparacion(request, cliente_id):
-    cliente = get_object_or_404(Cliente, pk=cliente_id)
+    cliente = get_object_or_404(Cliente, id=cliente_id)
     if request.method == "POST":
-        form = ReparacionForm(request.POST, cliente=cliente)
-        formset = DetalleReparacionFormSet(request.POST)
-        if form.is_valid() and formset.is_valid():
-            reparacion = form.save(commit=False)
+        reparacion_form = ReparacionForm(request.POST, cliente=cliente)
+        detalle_formset = DetalleReparacionFormSet(request.POST)
+        if reparacion_form.is_valid() and detalle_formset.is_valid():
+            reparacion = reparacion_form.save(commit=False)
             reparacion.cliente = cliente
             reparacion.save()
-
-            for detalle_form in formset:
-                if detalle_form.cleaned_data:  # Verifica que no esté vacío
-                    try:
-                        detalle = detalle_form.save(commit=False)
-                        detalle.reparacion = reparacion
-                        detalle.save()
-                    except ValueError as e:
-                        print(f"Error al guardar el detalle: {e}")
-                        return render(
-                            request,
-                            "registro_reparacion.html",
-                            {
-                                "form": form,
-                                "formset": formset,
-                                "cliente": cliente,
-                                "error": f"Error en los detalles: {e}",
-                            },
-                        )
-            return redirect("inicio")
+            detalles = detalle_formset.save(commit=False)
+            for detalle in detalles:
+                detalle.reparacion = reparacion
+                detalle.save()
+            return redirect("inicio")  # Ajusta esta URL según tu configuración
     else:
-        form = ReparacionForm(cliente=cliente)
-        formset = DetalleReparacionFormSet()
+        reparacion_form = ReparacionForm(cliente=cliente)
+        detalle_formset = DetalleReparacionFormSet()
 
-    return render(
-        request,
-        "registro_reparacion.html",
-        {"form": form, "formset": formset, "cliente": cliente},
-    )
+    return render(request, "registrar_reparacion.html", {
+        "reparacion_form": reparacion_form,
+        "detalle_formset": detalle_formset,
+        "cliente": cliente
+    })
+
 
 
 def inicio(request):

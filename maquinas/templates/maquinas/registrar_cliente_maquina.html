@@ -1,0 +1,11 @@
+<h1>Registrar Cliente y Máquina</h1>
+<form method="post">
+  {% csrf_token %}
+  <h3>Datos del Cliente</h3>
+  {{ cliente_form.as_p }}
+
+  <h3>Datos de la Máquina</h3>
+  {{ maquina_form.as_p }}
+
+  <button type="submit">Registrar</button>
+</form>

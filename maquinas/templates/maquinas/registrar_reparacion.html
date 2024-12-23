@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Registrar Reparación para {{ cliente.nombre }} {{ cliente.apellido }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend>Datos de la Reparación</legend>
+        {{ reparacion_form.as_p }}
+    </fieldset>
+
+    <fieldset>
+        <legend>Detalles de Reparación</legend>
+        <table id="detalles-reparacion">
+            <thead>
+                <tr>
+                    <th>Cantidad</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Subtotal</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ detalle_formset.management_form }}
+                {% for form in detalle_formset %}
+                <tr>
+                    <td>{{ form.cantidad }}</td>
+                    <td>{{ form.descripcion }}</td>
+                    <td>{{ form.precio }}</td>
+                    <td class="subtotal"></td>
+                    <td>{{ form.DELETE }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="button" id="add-row">Añadir Fila</button>
+    </fieldset>
+
+    <fieldset>
+        <legend>Totales</legend>
+        <label for="mano_obra">Mano de obra:</label>
+        {{ reparacion_form.mano_obra }}
+
+        <p>Total Detalles: <span id="total-detalles">0</span></p>
+        <p>Total General (incl. mano de obra): <span id="total-general">0</span></p>
+    </fieldset>
+
+    <button type="submit">Guardar Reparación</button>
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const table = document.querySelector("#detalles-reparacion tbody");
+        const addRowButton = document.querySelector("#add-row");
+        const totalDetalles = document.querySelector("#total-detalles");
+        const totalGeneral = document.querySelector("#total-general");
+        const manoObraField = document.querySelector("#id_mano_obra");
+
+        const updateTotals = () => {
+            let total = 0;
+            table.querySelectorAll("tr").forEach((row) => {
+                const cantidad = row.querySelector("input[name$='-cantidad']").value || 0;
+                const precio = row.querySelector("input[name$='-precio']").value || 0;
+                const subtotal = cantidad * precio;
+                row.querySelector(".subtotal").textContent = subtotal.toFixed(2);
+                total += subtotal;
+            });
+            totalDetalles.textContent = total.toFixed(2);
+            const manoObra = parseFloat(manoObraField.value) || 0;
+            totalGeneral.textContent = (total + manoObra).toFixed(2);
+        };
+
+        addRowButton.addEventListener("click", () => {
+            const newRow = table.querySelector("tr").cloneNode(true);
+            newRow.querySelectorAll("input").forEach((input) => (input.value = ""));
+            table.appendChild(newRow);
+        });
+
+        table.addEventListener("input", updateTotals);
+        manoObraField.addEventListener("input", updateTotals);
+    });
+</script>
+{% endblock %}

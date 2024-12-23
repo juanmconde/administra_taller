@@ -1,0 +1,16 @@
+<h1>Agregar Máquina a Cliente</h1>
+<form method="post">
+  {% csrf_token %}
+  <h3>Selecciona un Cliente</h3>
+  <select name="cliente_id" required>
+    <option value="" disabled selected>Seleccionar Cliente</option>
+    {% for cliente in clientes %}
+      <option value="{{ cliente.id }}">{{ cliente.nombre }} {{ cliente.apellido }}</option>
+    {% endfor %}
+  </select>
+
+  <h3>Datos de la Máquina</h3>
+  {{ maquina_form.as_p }}
+
+  <button type="submit">Agregar Máquina</button>
+</form>

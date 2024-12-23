@@ -3,6 +3,55 @@ from .models import Cliente, Reparacion, DetalleReparacion, Maquina
 from .forms import ReparacionForm, ClienteForm, MaquinaForm, DetalleReparacionFormSet
 from django.contrib import messages
 
+
+def agregar_maquina_cliente(request):
+    if request.method == "POST":
+        maquina_form = MaquinaForm(request.POST)
+
+        if maquina_form.is_valid():
+            cliente_id = request.POST.get("cliente_id")
+            cliente = get_object_or_404(Cliente, id=cliente_id)
+
+            maquina = maquina_form.save(commit=False)
+            maquina.cliente = cliente
+            maquina.save()
+
+            messages.success(request, "Máquina agregada al cliente.")
+            return redirect("inicio")  # Cambia esto por la URL adecuada
+    else:
+        maquina_form = MaquinaForm()
+        clientes = Cliente.objects.all()
+
+    return render(
+        request,
+        "agregar_maquina_cliente.html",
+        {"maquina_form": maquina_form, "clientes": clientes},
+    )
+
+
+def registrar_cliente_maquina(request):
+    if request.method == "POST":
+        cliente_form = ClienteForm(request.POST)
+        maquina_form = MaquinaForm(request.POST)
+
+        if cliente_form.is_valid() and maquina_form.is_valid():
+            cliente = cliente_form.save()
+            maquina = maquina_form.save(commit=False)
+            maquina.cliente = cliente  # Asocia la máquina al cliente recién creado
+            maquina.save()
+
+            messages.success(request, "Cliente y máquina registrados correctamente.")
+            return redirect("inicio")  # Cambia esto por la URL a la que quieras redirigir
+    else:
+        cliente_form = ClienteForm()
+        maquina_form = MaquinaForm()
+
+    return render(
+        request,
+        "registrar_cliente_maquina.html",
+        {"cliente_form": cliente_form, "maquina_form": maquina_form},
+    )
+
 def registrar_reparacion(request, cliente_id):
     cliente = get_object_or_404(Cliente, pk=cliente_id)
     if request.method == "POST":

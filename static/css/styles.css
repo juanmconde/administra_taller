@@ -286,3 +286,41 @@ td:nth-child(1), td:nth-child(2) { /* Ancho personalizado para nombre y apellido
 td:nth-child(3) { /* Teléfono */
   width: 20%;
 }
+
+.menu-opciones {
+    background-color: #f4f4f4; /* Color de fondo */
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.menu-opciones .btn {
+    margin: 5px;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff; /* Color del botón */
+    border-radius: 5px;
+    border: none;
+}
+
+.menu-opciones .btn:hover {
+    background-color: #0056b3; /* Color al pasar el mouse */
+}
+
+/* Estilo general para todos los botones */
+.btn {
+  margin: 5px;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #007bff; /* Color principal del botón */
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+  display: inline-block;
+}
+
+.btn:hover {
+  background-color: #0056b3; /* Color al pasar el mouse */
+}

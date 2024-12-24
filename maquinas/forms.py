@@ -72,5 +72,4 @@ class ReparacionForm(forms.ModelForm):
         cliente = kwargs.pop("cliente", None)  # Extrae el argumento cliente
         super().__init__(*args, **kwargs)
         if cliente:
-            # Filtra las máquinas disponibles según el cliente
-            self.fields["maquina"].queryset = cliente.maquinas.all()
+           self.fields['maquina'].queryset = Maquina.objects.filter(cliente=cliente)

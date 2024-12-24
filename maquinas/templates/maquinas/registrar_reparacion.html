@@ -29,7 +29,7 @@
                     <td>{{ form.cantidad }}</td>
                     <td>{{ form.descripcion }}</td>
                     <td>{{ form.precio }}</td>
-                    <td class="subtotal"></td>
+                    <td class="subtotal">0.00</td>
                     <td>{{ form.DELETE }}</td>
                 </tr>
                 {% endfor %}
@@ -43,8 +43,8 @@
         <label for="mano_obra">Mano de obra:</label>
         {{ reparacion_form.mano_obra }}
 
-        <p>Total Detalles: <span id="total-detalles">0</span></p>
-        <p>Total General (incl. mano de obra): <span id="total-general">0</span></p>
+        <p>Total Detalles: <span id="total-detalles">0.00</span></p>
+        <p>Total General (incl. mano de obra): <span id="total-general">0.00</span></p>
     </fieldset>
 
     <button type="submit">Guardar Reparación</button>
@@ -61,8 +61,8 @@
         const updateTotals = () => {
             let total = 0;
             table.querySelectorAll("tr").forEach((row) => {
-                const cantidad = row.querySelector("input[name$='-cantidad']").value || 0;
-                const precio = row.querySelector("input[name$='-precio']").value || 0;
+                const cantidad = parseFloat(row.querySelector("input[name$='-cantidad']").value) || 0;
+                const precio = parseFloat(row.querySelector("input[name$='-precio']").value) || 0;
                 const subtotal = cantidad * precio;
                 row.querySelector(".subtotal").textContent = subtotal.toFixed(2);
                 total += subtotal;
@@ -74,12 +74,21 @@
 
         addRowButton.addEventListener("click", () => {
             const newRow = table.querySelector("tr").cloneNode(true);
-            newRow.querySelectorAll("input").forEach((input) => (input.value = ""));
+            newRow.querySelectorAll("input").forEach((input) => {
+                input.value = "";
+                input.name = input.name.replace(/-\d+-/, `-${detalle_formset.total_forms.value}-`);
+            });
             table.appendChild(newRow);
+
+            // Increment the management form's total_forms value
+            const totalForms = document.querySelector("input[name='{{ detalle_formset.management_form.prefix }}-TOTAL_FORMS']");
+            totalForms.value = parseInt(totalForms.value) + 1;
         });
 
         table.addEventListener("input", updateTotals);
         manoObraField.addEventListener("input", updateTotals);
+
+        updateTotals(); // Initial call to update totals
     });
 </script>
 {% endblock %}

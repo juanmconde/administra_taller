@@ -82,12 +82,15 @@ def registrar_reparacion(request, cliente_id):
     if request.method == "POST":
         reparacion_form = ReparacionForm(request.POST, cliente=cliente)
         detalle_formset = DetalleReparacionFormSet(request.POST)
+        
         if reparacion_form.is_valid() and detalle_formset.is_valid():
             reparacion = reparacion_form.save(commit=False)
             reparacion.cliente = cliente
             reparacion.save()
+            
             detalle_formset.instance = reparacion
             detalle_formset.save()
+            
             return redirect('lista_reparaciones')
     else:
         reparacion_form = ReparacionForm(cliente=cliente)
@@ -99,30 +102,6 @@ def registrar_reparacion(request, cliente_id):
         "detalle_formset": detalle_formset,
     })
     
-# def registrar_reparacion(request, cliente_id):
-#     cliente = get_object_or_404(Cliente, id=cliente_id)
-#     if request.method == "POST":
-#         reparacion_form = ReparacionForm(request.POST, cliente=cliente)
-#         detalle_formset = DetalleReparacionFormSet(request.POST)
-#         if reparacion_form.is_valid() and detalle_formset.is_valid():
-#             reparacion = reparacion_form.save(commit=False)
-#             reparacion.cliente = cliente
-#             reparacion.save()
-#             detalles = detalle_formset.save(commit=False)
-#             for detalle in detalles:
-#                 detalle.reparacion = reparacion
-#                 detalle.save()
-#             return redirect("inicio")  # Ajusta esta URL según tu configuración
-#     else:
-#         reparacion_form = ReparacionForm(cliente=cliente)
-#         detalle_formset = DetalleReparacionFormSet()
-
-#     return render(request, "registrar_reparacion.html", {
-#         "reparacion_form": reparacion_form,
-#         "detalle_formset": detalle_formset,
-#         "cliente": cliente
-#     })
-
 
 
 def inicio(request):

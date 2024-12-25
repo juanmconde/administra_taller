@@ -1,13 +1,25 @@
-/* General */
+/* General Styles */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
   color: #333;
   margin: 0;
   padding: 0;
+  text-align: center;
 }
 
-/* Contenedor principal */
+nav a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #007BFF;
+  font-weight: bold;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Container */
 .container {
   max-width: 800px;
   margin: 0 auto;
@@ -18,21 +30,14 @@ body {
   text-align: center;
 }
 
-/* Información adicional */
-.info {
-  text-align: left;
-  margin-bottom: 20px;
-  font-size: 1rem;
-}
-
-/* Encabezado */
+/* Headings */
 h1 {
   text-align: center;
   color: #444;
   margin-top: 20px;
 }
 
-/* Formularios */
+/* Forms */
 form {
   display: flex;
   flex-direction: column;
@@ -73,254 +78,121 @@ form button:hover {
   background-color: #4cae4c;
 }
 
-/* Listas */
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-ul li {
-  padding: 10px;
-  background: #fff;
+/* Tables */
+table {
   margin: 10px auto;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 800px;
-}
-
-ul li:nth-child(odd) {
-  background: #f9f9f9;
-}
-
-ul li a {
-  text-decoration: none;
-  color: #007bff;
-  margin-left: 10px;
-  transition: color 0.3s ease;
-}
-
-ul li a:hover {
-  color: #0056b3;
-}
-
-/* Botones de acción */
-button {
-  padding: 8px 15px;
-  margin-left: 5px;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button.eliminar {
-  background-color: #d9534f;
-  color: white;
-}
-
-button.eliminar:hover {
-  background-color: #c9302c;
-}
-
-button.registrar {
-  background-color: #0275d8;
-  color: white;
-}
-
-button.registrar:hover {
-  background-color: #025aa5;
-}
-
-/* Botones */
-.form-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.btn {
-  padding: 10px 20px;
-  background-color: #5cb85c; /* Verde */
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-  background-color: #4cae4c; /* Verde más oscuro */
-}
-
-.btn-secondary {
-  background-color: #007bff; /* Azul */
-}
-
-.btn-secondary:hover {
-  background-color: #0056b3; /* Azul más oscuro */
-}
-
-/* Enlaces */
-a {
-  color: #007bff;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: #0056b3;
-}
-
-/* Responsividad */
-@media (max-width: 768px) {
-  ul li {
-      flex-direction: column;
-      align-items: flex-start;
-  }
-
-  form {
-      width: 90%;
-  }
-}
-
-.btn {
-  display: inline-block;
-  padding: 10px 20px;
-  margin: 10px 0;
-  text-decoration: none;
-  color: #fff;
-  background-color: #007bff;
-  border-radius: 5px;
-  text-align: center;
-  transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-  background-color: #0056b3;
-}
-
-.btn-primary {
-  background-color: #007bff;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-}
-
-.btn-secondary:hover {
-  background-color: #5a6268;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    background-color: #f9f9f9;
-}
-
-nav a {
-    margin: 0 15px;
-    text-decoration: none;
-    color: #007BFF;
-    font-weight: bold;
-}
-
-nav a:hover {
-    text-decoration: underline;
-}
-
-table {
-    margin: 20px auto;
-    border-collapse: collapse;
-    width: 80%;
-}
-
-table th, table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-table th {
-    background-color: #f2f2f2;
-}
-
-.centrar-contenido {
-  display: flex;
-  flex-direction: column; /* Apila los elementos en una columna */
-  align-items: center;   /* Centra horizontalmente */
-  justify-content: center; /* Centra verticalmente (si el contenedor tiene altura) */
-  margin-top: 20px; /* Espaciado opcional */
-}
-
-.btn {
-  margin: 5px; /* Espaciado entre los botones */
-}
-table {
-  width: 60%;
   border-collapse: collapse;
+  width: 80%;
 }
 
 table th, table td {
   border: 1px solid #ddd;
-  padding: 6px;
-  text-align: left;
+  padding: 8px;
 }
 
 table th {
   background-color: #f2f2f2;
 }
 
-td:nth-child(1), td:nth-child(2) { /* Ancho personalizado para nombre y apellido */
-  width: 30%; /* Ajusta este valor según tus necesidades */
+table td:nth-child(1),
+table td:nth-child(2) {
+  width: 30%;
 }
 
-td:nth-child(3) { /* Teléfono */
-  width: 20%;
+table td:nth-child(3) {
+  width: 40%;
 }
 
-.menu-opciones {
-    background-color: #f4f4f4; /* Color de fondo */
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #ccc;
+/* Details Section (Detalles de Reparación) */
+#detalles-reparacion {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.menu-opciones .btn {
-    margin: 5px;
-    padding: 10px 20px;
-    text-decoration: none;
-    color: #fff;
-    background-color: #007bff; /* Color del botón */
-    border-radius: 5px;
-    border: none;
+#detalles-reparacion th, 
+#detalles-reparacion td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
 }
 
-.menu-opciones .btn:hover {
-    background-color: #0056b3; /* Color al pasar el mouse */
+#detalles-reparacion th {
+  background-color: #f0f0f0;
+  color: #333;
 }
 
-/* Estilo general para todos los botones */
+#detalles-reparacion td {
+  background-color: #fff;
+}
+
+/* Button Styles */
 .btn {
   margin: 5px;
   padding: 10px 20px;
-  text-decoration: none;
   color: #fff;
-  background-color: #007bff; /* Color principal del botón */
-  border-radius: 5px;
+  background-color: #007bff;
   border: none;
+  border-radius: 5px;
   text-align: center;
   display: inline-block;
+  transition: background-color 0.3s ease;
 }
 
 .btn:hover {
-  background-color: #0056b3; /* Color al pasar el mouse */
+  background-color: #0056b3;
+}
+
+.btn.eliminar {
+  background-color: #d9534f;
+}
+
+.btn.eliminar:hover {
+  background-color: #c9302c;
+}
+
+.btn.registrar {
+  background-color: #0275d8;
+}
+
+.btn.registrar:hover {
+  background-color: #025aa5;
+}
+
+/* Menu Opciones */
+.menu-opciones {
+  background-color: #f4f4f4;
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.menu-opciones .btn {
+  margin: 5px;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  ul li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  form {
+    width: 90%;
+  }
+}
+/* Ajustar columnas específicas */
+.table-lista-clientes th:nth-child(1), /* Primera columna: Nombre */
+.table-lista-clientes td:nth-child(1) {
+    width: 30%; /* Ajusta el ancho según lo que necesites */
+}
+
+.table-lista-clientes th:nth-child(2), /* Segunda columna: Apellido */
+.table-lista-clientes td:nth-child(2) {
+    width: 30%;
+}
+
+.table-lista-clientes th:nth-child(3), /* Tercera columna: Teléfono u otra información */
+.table-lista-clientes td:nth-child(3) {
+    width: 40%;
 }

@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block content %}
 <h1>Registrar Reparación para {{ cliente.nombre }} {{ cliente.apellido }}</h1>
 
@@ -57,6 +56,7 @@
         const totalDetalles = document.querySelector("#total-detalles");
         const totalGeneral = document.querySelector("#total-general");
         const manoObraField = document.querySelector("#id_mano_obra");
+        const managementFormTotal = document.querySelector("input[name$='-TOTAL_FORMS']");
 
         const updateTotals = () => {
             let total = 0;
@@ -72,18 +72,31 @@
             totalGeneral.textContent = (total + manoObra).toFixed(2);
         };
 
-        addRowButton.addEventListener("click", () => {
-            const newRow = table.querySelector("tr").cloneNode(true);
+        const addRow = () => {
+            const lastRow = table.querySelector("tr:last-child");
+            const newRow = lastRow.cloneNode(true);
+
             newRow.querySelectorAll("input").forEach((input) => {
                 input.value = "";
-                input.name = input.name.replace(/-\d+-/, `-${detalle_formset.total_forms.value}-`);
+                const name = input.name;
+                const match = name.match(/-(\d+)-/);
+                if (match) {
+                    const currentIndex = parseInt(match[1]);
+                    const newIndex = currentIndex + 1;
+                    input.name = name.replace(`-${currentIndex}-`, `-${newIndex}-`);
+                    input.id = input.id.replace(`-${currentIndex}-`, `-${newIndex}-`);
+                }
             });
+
             table.appendChild(newRow);
 
-            // Increment the management form's total_forms value
-            const totalForms = document.querySelector("input[name='{{ detalle_formset.management_form.prefix }}-TOTAL_FORMS']");
-            totalForms.value = parseInt(totalForms.value) + 1;
-        });
+            // Update the total number of forms in the management form
+            managementFormTotal.value = parseInt(managementFormTotal.value) + 1;
+
+            updateTotals();
+        };
+
+        addRowButton.addEventListener("click", addRow);
 
         table.addEventListener("input", updateTotals);
         manoObraField.addEventListener("input", updateTotals);

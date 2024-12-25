@@ -7,13 +7,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Lista de Clientes</title>
-
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        /* Estilo específico para la tabla de la lista de clientes */
+        .table-lista-clientes {
+            width: 90%; /* Ajusta el ancho según lo necesario */
+            max-width: 1200px; /* Ancho máximo */
+            margin: 0 auto; /* Centrar la tabla */
+            border-collapse: collapse; /* Unificar bordes */
+        }
 
+        .table-lista-clientes th:nth-child(1),
+        .table-lista-clientes td:nth-child(1) {
+            width: 30%; /* Ancho para columna Nombre */
+        }
+
+        .table-lista-clientes th:nth-child(2),
+        .table-lista-clientes td:nth-child(2) {
+            width: 30%; /* Ancho para columna Apellido */
+        }
+
+        .table-lista-clientes th:nth-child(3),
+        .table-lista-clientes td:nth-child(3) {
+            width: 20%; /* Ancho para columna Teléfono */
+        }
+
+        .table-lista-clientes th:nth-child(4),
+        .table-lista-clientes td:nth-child(4) {
+            width: 20%; /* Ancho para columna Acciones */
+        }
+    </style>
 </head>
 <body>
     <h1>Lista de Clientes</h1>
-    <table>
+    <table class="table-lista-clientes">
         <thead>
             <tr>
                 <th>Nombre</th>

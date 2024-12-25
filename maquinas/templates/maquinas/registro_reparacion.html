@@ -1,29 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Reparación</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Registro de Reparación</title>
+    <style>
+        .form-container {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+        h1 {
+            color: #444;
+            text-align: center;
+        }
+        form input, form button {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <h1>Registrar Reparación</h1>
-    <div class="centrar-contenido">
+    <div class="form-container">
+        <h1>Registrar Reparación</h1>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            {{ formset.management_form }}
-            <h2>Detalles de Reparación</h2>
-            <table>
-                {% for form in formset %}
-                    <tr>
-                        <td>{{ form.as_p }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-            <button type="submit">Guardar</button>
+            <button type="submit" class="btn btn-primary">Registrar</button>
         </form>
-        <a href="{% url 'inicio' %}" class="btn btn-secondary">Inicio</a>
     </div>
 </body>
 </html>
+{% endblock %}

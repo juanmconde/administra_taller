@@ -1,17 +1,61 @@
-<h1>Detalle del Cliente: {{ cliente.nombre }} {{ cliente.apellido }}</h1>
-
-<h2>Máquinas Registradas</h2>
-<ul>
-    {% for maquina in maquinas %}
-        <li>{{ maquina.maquina }} - Problema: {{ maquina.problema }}</li>
-    {% endfor %}
-</ul>
-
-<h2>Agregar Nueva Máquina</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Agregar Máquina</button>
-</form>
-
-<a href="{% url 'lista_clientes' %}">Volver a la lista de clientes</a>
+{% extends "base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle Cliente</title>
+    <style>
+        .detail-container {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+        }
+        h1 {
+            color: #444;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-container">
+        <h1>Detalle de {{ cliente.nombre }} {{ cliente.apellido }}</h1>
+        <p>Teléfono: {{ cliente.telefono }}</p>
+        <h2>Máquinas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Problema</th>
+                    <th>Fecha de Entrada</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for maquina in cliente.maquinas.all %}
+                <tr>
+                    <td>{{ maquina.maquina }}</td>
+                    <td>{{ maquina.problema }}</td>
+                    <td>{{ maquina.fecha_entrada }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+{% endblock %}

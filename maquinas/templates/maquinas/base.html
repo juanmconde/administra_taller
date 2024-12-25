@@ -1,27 +1,44 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Mi Proyecto{% endblock %}</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>{% block title %}Administración de Taller{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        nav {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
-    {% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
-    {% endif %}
-    <nav style="text-align: center; margin-bottom: 30px;">
+    <nav>
         <a href="{% url 'inicio' %}">Inicio</a>
         <a href="{% url 'lista_clientes' %}">Clientes</a>
-        <a href="{% url 'registrar_cliente' %}">Registrar Cliente</a>
+        <a href="{% url 'lista_maquinas' %}">Máquinas</a>
         <a href="{% url 'lista_reparaciones' %}">Reparaciones</a>
     </nav>
-    <div style="text-align: center;">
+    <main>
         {% block content %}
-        <!-- Contenido específico de cada página -->
         {% endblock %}
-    </div>
+    </main>
 </body>
 </html>

@@ -1,38 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - Lista de Máquinas</title>
-    <link rel="icon" href="/static/favicon.ico">
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Inicio</title>
+    <style>
+        .welcome-container {
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            text-align: center;
+        }
+        h1 {
+            color: #444;
+        }
+        p {
+            margin: 20px 0;
+            font-size: 1.2rem;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Lista de Clientes</h1>
-    <!-- Formulario de búsqueda -->
-    <form method="get" action="{% url 'lista_clientes' %}">
-        <label for="q">Buscar cliente:</label>
-        <input id="q" type="text" name="q" placeholder="Buscar por apellido, nombre o teléfono" value="{{ query }}">
-        <button type="submit">Buscar</button> 
-        <a href="{% url 'registrar_cliente' %}" class="btn btn-primary">Registrar Cliente</a>
-        <a href="{% url 'lista_clientes' %}" class="btn btn-secondary">Ver Clientes</a>
-        <a href="{% url 'lista_maquinas' %}" class="btn btn-secondary">Ver Máquinas</a>
-    </form>
-    <ul>
-        {% if clientes %}
-            {% for cliente in clientes %}
-                <li>
-                    <strong>{{ cliente.apellido }}</strong>, {{ cliente.nombre }} - Tel: {{ cliente.telefono }}
-                    {% if cliente.maquinas.count > 0 %}
-                        - Máquina: {{ cliente.maquinas.first.tipo }}
-                    {% endif %}
-                    <a href="{% url 'eliminar_cliente' cliente.pk %}" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">Eliminar</a>
-                    <a href="{% url 'registrar_reparacion' cliente.pk %}">Registrar Reparación</a>
-                </li>
-            {% endfor %}
-        {% else %}
-            <li>No se encontraron clientes.</li>
-        {% endif %}
-    </ul>
+    <div class="welcome-container">
+        <h1>Bienvenido al Sistema de Gestión del Taller</h1>
+        <p>Utiliza el menú de navegación para acceder a las diferentes secciones.</p>
+    </div>
 </body>
 </html>
+{% endblock %}

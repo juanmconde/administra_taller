@@ -1,16 +1,38 @@
-<h1>Agregar Máquina a Cliente</h1>
-<form method="post">
-  {% csrf_token %}
-  <h3>Selecciona un Cliente</h3>
-  <select name="cliente_id" required>
-    <option value="" disabled selected>Seleccionar Cliente</option>
-    {% for cliente in clientes %}
-      <option value="{{ cliente.id }}">{{ cliente.nombre }} {{ cliente.apellido }}</option>
-    {% endfor %}
-  </select>
-
-  <h3>Datos de la Máquina</h3>
-  {{ maquina_form.as_p }}
-
-  <button type="submit">Agregar Máquina</button>
-</form>
+{% extends "base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Máquina a Cliente</title>
+    <style>
+        .form-container {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+        h1 {
+            color: #444;
+            text-align: center;
+        }
+        form input, form button {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Agregar Máquina para {{ cliente.nombre }} {{ cliente.apellido }}</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acciones para {{ cliente.nombre }} {{ cliente.apellido }}</title>
+    <style>
+        .acciones-container {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            text-align: center;
+        }
+        .acciones-container button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        .acciones-container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="acciones-container">
+        <h1>Opciones para {{ cliente.nombre }} {{ cliente.apellido }}</h1>
+        <form method="get" action="{% url 'registrar_maquina' cliente.id %}">
+            <button type="submit">Agregar Máquina</button>
+        </form>
+        <form method="get" action="{% url 'reparar_maquina' cliente.id %}">
+            <button type="submit">Reparar Máquina</button>
+        </form>
+    </div>
+</body>
+</html>

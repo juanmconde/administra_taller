@@ -12,7 +12,8 @@
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            max-width: 1000px;
+            max-width: auto; /* Contenedor más ancho */
+            width: 90%; /* Permite que se ajuste dinámicamente */
         }
         h1 {
             color: #444;
@@ -23,30 +24,38 @@
             border-collapse: collapse;
             margin-bottom: 20px;
         }
-        table th {
+        table th, table td {
             border: 1px solid #ddd;
-            padding: 10px;
+            padding: 15px; /* Más espacio en las celdas */
             text-align: left;
+        }
+        table th {
             background-color: #f2f2f2;
         }
-        table tbody tr {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-            height: 50px; /* Ajusta esta altura según lo que desees */
+        table th.nombre, table td.nombre {
+            width: 5%; /* Ajusta el ancho para nombre */
         }
-        table tbody tr td {
-            vertical-align: middle;
+        table th.apellido, table td.apellido {
+            width: 5%; /* Ajusta el ancho para apellido */
+        }
+        table th.telefono, table td.telefono {
+            width: 3%; /* Ajusta el ancho para teléfono */
+        }
+        table th.maquinas, table td.maquinas {
+            width: 10%; /* Ajusta el ancho para máquinas */
+        }
+        table th.acciones, table td.acciones {
+            width: 10%; /* Ajusta el ancho para acciones */
         }
         .action-buttons {
             display: flex;
-            flex-direction: row; /* Ordena los botones verticalmente */
-            gap: 5px; /* Espaciado entre botones */
+            flex-wrap: wrap; /* Permite que los botones se acomoden si hay poco espacio */
+            gap: 5px;
         }
         .btn {
             padding: 8px 15px;
             color: #fff;
-            background-color: #007bff;
+            background-color: #0056b3;
             border: none;
             border-radius: 5px;
             text-align: center;
@@ -54,7 +63,7 @@
             transition: background-color 0.3s ease;
         }
         .btn:hover {
-            background-color: #0056b3;
+            background-color: #003d80;
         }
         .btn-container {
             margin-bottom: 15px;
@@ -79,29 +88,29 @@
         <table>
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Teléfono</th>
-                    <th>Máquinas</th>
-                    <th>Acciones</th>
+                    <th class="nombre">Nombre</th>
+                    <th class="apellido">Apellido</th>
+                    <th class="telefono">Teléfono</th>
+                    <th class="maquinas">Máquinas</th>
+                    <th class="acciones">Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for cliente in clientes %}
                 <tr>
-                    <td>{{ cliente.nombre }}</td>
-                    <td>{{ cliente.apellido }}</td>
-                    <td>{{ cliente.telefono }}</td>
-                    <td>
+                    <td class="nombre">{{ cliente.nombre }}</td>
+                    <td class="apellido">{{ cliente.apellido }}</td>
+                    <td class="telefono">{{ cliente.telefono }}</td>
+                    <td class="maquinas">
                         <select class="dropdown">
-                            {% for maquina in cliente.maquina_set.all %}
-                            <option>{{ maquina.maquina }}</option>
+                            {% for maquina in cliente.maquinas.all %}
+                            <option>{{ maquina.maquina }} ({{ maquina.problema_corto }})</option>
                             {% empty %}
                             <option>No hay máquinas</option>
                             {% endfor %}
                         </select>
                     </td>
-                    <td>
+                    <td class="acciones">
                         <div class="action-buttons">
                             <a href="{% url 'registrar_maquina' cliente.pk %}" class="btn">Agregar</a>
                             <a href="{% url 'editar_cliente' cliente.pk %}" class="btn">Editar</a>

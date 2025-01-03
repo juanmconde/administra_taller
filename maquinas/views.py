@@ -2,6 +2,18 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import Cliente, Reparacion, DetalleReparacion, Maquina
 from .forms import ReparacionForm, ClienteForm, MaquinaForm, DetalleReparacionFormSet
 from django.contrib import messages
+from django.db.models import Q
+from datetime import date
+
+
+
+def reparar_maquina(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    maquinas = Maquina.objects.filter(cliente=cliente)
+    if request.method == "POST":
+        # Aquí puedes manejar la lógica de la reparación
+        return render(request, "reparar_maquina.html", {"cliente": cliente, "maquinas": maquinas})
+    return render(request, "reparar_maquina.html", {"cliente": cliente, "maquinas": maquinas})
 
 
 def editar_cliente(request, cliente_id):
@@ -18,16 +30,20 @@ def editar_cliente(request, cliente_id):
 def registrar_maquina(request, cliente_id):
     cliente = get_object_or_404(Cliente, id=cliente_id)
     if request.method == "POST":
-        form = MaquinaForm(request.POST)
-        if form.is_valid():
-            maquina = form.save(commit=False)
+        maquina_form = MaquinaForm(request.POST)
+        if maquina_form.is_valid():
+            maquina = maquina_form.save(commit=False)
             maquina.cliente = cliente
             maquina.save()
-            return redirect('lista_clientes')  # Cambia esto si necesitas redirigir a otro lugar
+            messages.success(request, "Máquina agregada correctamente.")
+            return redirect("lista_clientes")
     else:
-        form = MaquinaForm()
-
-    return render(request, 'maquinas/registrar_maquina.html', {'form': form, 'cliente': cliente})
+        maquina_form = MaquinaForm(initial={"fecha_entrada": date.today()})  # Inicializa con la fecha actual
+    return render(
+        request,
+        "registrar_maquina.html",
+        {"maquina_form": maquina_form, "cliente": cliente},
+    )
 
 def agregar_maquina_cliente(request):
     if request.method == "POST":
@@ -102,37 +118,61 @@ def registrar_reparacion(request, cliente_id):
         "detalle_formset": detalle_formset,
     })
     
-
+def acciones_cliente(request, cliente_id):
+    cliente = get_object_or_404(Cliente, id=cliente_id)
+    return render(request, "acciones_cliente.html", {"cliente": cliente})
 
 def inicio(request):
-    return render(request, "maquinas/inicio.html")
+    query = request.GET.get("q", "")
+    clientes = (
+        Cliente.objects.filter(
+            Q(apellido__icontains=query)
+            | Q(nombre__icontains=query)
+            | Q(telefono__icontains=query)
+        )
+        if query
+        else []
+    )
+    return render(request, "inicio.html", {"clientes": clientes, "query": query})
 
 
 def lista_maquinas(request):
     maquinas = Maquina.objects.all()
     return render(request, "maquinas/lista_maquinas.html", {"maquinas": maquinas})
 
-
 def registrar_cliente(request):
+    cliente = None
+    cliente_existe = False  # Bandera para mostrar el botón de agregar máquina
+
     if request.method == "POST":
         cliente_form = ClienteForm(request.POST)
         maquina_form = MaquinaForm(request.POST)
 
-        # Verificar si ya existe un cliente con el mismo teléfono
-        if cliente_form.is_valid() and maquina_form.is_valid():
-            telefono = cliente_form.cleaned_data["telefono"]
-            cliente = Cliente.objects.filter(telefono=telefono).first()
+        # Buscar cliente por nombre y apellido
+        nombre = request.POST.get("nombre")
+        apellido = request.POST.get("apellido")
+        print(f"Datos recibidos: Nombre={nombre}, Apellido={apellido}")  # DEPURAR
 
-            if not cliente:  # Si no existe, creamos el cliente
+        if nombre and apellido:
+            cliente = Cliente.objects.filter(nombre__iexact=nombre, apellido__iexact=apellido).first()
+            cliente_existe = cliente is not None
+            print(f"Cliente encontrado: {cliente}")  # DEPURAR
+
+        if cliente_existe:  # Si el cliente ya existe
+            if maquina_form.is_valid():
+                maquina = maquina_form.save(commit=False)
+                maquina.cliente = cliente
+                maquina.save()
+                messages.success(request, f"Máquina agregada al cliente {cliente.nombre} {cliente.apellido}.")
+                return redirect("lista_clientes")
+        else:  # Registrar cliente nuevo y su máquina
+            if cliente_form.is_valid() and maquina_form.is_valid():
                 cliente = cliente_form.save()
-
-            # Asociar la máquina al cliente existente o recién creado
-            maquina = maquina_form.save(commit=False)
-            maquina.cliente = cliente
-            maquina.save()
-
-            messages.success(request, "Cliente y máquina registrados correctamente.")
-            return redirect("inicio")  # Cambia esto por tu URL de inicio o lista de clientes
+                maquina = maquina_form.save(commit=False)
+                maquina.cliente = cliente
+                maquina.save()
+                messages.success(request, "Cliente y máquina registrados correctamente.")
+                return redirect("lista_clientes")
     else:
         cliente_form = ClienteForm()
         maquina_form = MaquinaForm()
@@ -140,7 +180,12 @@ def registrar_cliente(request):
     return render(
         request,
         "registrar_cliente.html",
-        {"cliente_form": cliente_form, "maquina_form": maquina_form},
+        {
+            "cliente_form": cliente_form,
+            "maquina_form": maquina_form,
+            "cliente": cliente,
+            "cliente_existe": cliente_existe,
+        },
     )
 
 
@@ -157,9 +202,8 @@ def eliminar_cliente(request, pk):
 
 
 def buscar_cliente(request):
-    query = request.GET.get("q", "")
-    clientes = (
-        Cliente.objects.filter(
+    query = request.GET.get("q", "").strip()
+    clientes = (Cliente.objects.filter(
             Q(apellido__icontains=query)
             | Q(nombre__icontains=query)
             | Q(telefono__icontains=query)

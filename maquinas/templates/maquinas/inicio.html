@@ -1,47 +1,35 @@
 {% extends "base.html" %}
-{% load static %}
+
+{% block title %}Inicio{% endblock %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Inicio</title>
-    <style>
-        .welcome-container {
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            text-align: center;
-        }
-        h1 {
-            color: #444;
-        }
-        p {
-            margin: 20px 0;
-            font-size: 1.2rem;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="welcome-container">
-        <h1>Bienvenido al Sistema de Gestión del Taller</h1>
-        <p>Utiliza el menú de navegación para acceder a las diferentes secciones.</p>
+<div style="text-align: center; padding: 50px;">
+    <h1>Bienvenido al Sistema de Administración del Taller</h1>
+    <p>Utiliza el menú superior para navegar entre las opciones disponibles.</p>
+
+    <div style="margin-top: 30px;">
+        <h2>Buscar Cliente</h2>
+        <form method="get" action="{% url 'buscar_cliente' %}" style="display: inline-block; margin-top: 10px;">
+            <input type="text" name="q" placeholder="Nombre o apellido del cliente"
+                   style="padding: 10px; font-size: 16px; width: 300px; border: 1px solid #ccc; border-radius: 5px;">
+            <button type="submit" class="nav-button">Buscar</button>
+        </form>
     </div>
-</body>
-</html>
+
+    {% if query %}
+        <div style="margin-top: 20px;">
+            <h3>Resultados de búsqueda para "{{ query }}":</h3>
+            {% if clientes %}
+                <ul>
+                    {% for cliente in clientes %}
+                        <li>{{ cliente.nombre }} {{ cliente.apellido }} - {{ cliente.telefono }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: red;">No se encontraron clientes con ese nombre o apellido.</p>
+                <a href="{% url 'registrar_cliente' %}" class="nav-button">Agregar Nuevo Cliente</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

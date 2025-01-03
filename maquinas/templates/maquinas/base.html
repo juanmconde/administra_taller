@@ -1,31 +1,44 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Administración de Taller{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>{% block title %}Administra Taller{% endblock %}</title>
     <style>
-        nav {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+        }
+        nav {
+            background-color: #007bff; /* Azul */
+            padding: 15px;
+            text-align: center;
+        }
+        nav a, .nav-button {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 10px 20px;
+            background-color: #0056b3; /* Azul oscuro */
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para efecto 3D */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            border: none; /* Sin bordes adicionales */
+            cursor: pointer;
+        }
+        nav a:hover, .nav-button:hover {
+            background-color: #003d80; /* Más oscuro al pasar el ratón */
+            border-color: #003060;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
+        }
+        .content-container {
+            padding: 20px;
         }
     </style>
 </head>
@@ -36,9 +49,8 @@
         <a href="{% url 'lista_maquinas' %}">Máquinas</a>
         <a href="{% url 'lista_reparaciones' %}">Reparaciones</a>
     </nav>
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+    <div class="content-container">
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>

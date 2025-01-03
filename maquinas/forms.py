@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import inlineformset_factory, modelformset_factory
 from .models import Cliente, Maquina, Reparacion, DetalleReparacion
+from datetime import date
+
 
 # Inline formset para DetalleReparacion
 DetalleReparacionFormSet = inlineformset_factory(
@@ -30,10 +32,15 @@ class MaquinaForm(forms.ModelForm):
         widgets = {
             "maquina": forms.TextInput(attrs={"class": "form-control"}),
             "problema": forms.Textarea(attrs={"rows": 3, "cols": 40}),
-            "fecha_entrada": forms.DateInput(
-                attrs={"class": "form-control", "type": "date"}
-            ),
+            "fecha_entrada": forms.DateInput(attrs={"type": "date"}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Establecer la fecha actual si no hay valor inicial
+        if not self.initial.get('fecha_entrada'):
+            self.fields['fecha_entrada'].initial = date.today()
+
 
 # Formulario para DetalleReparacion
 class DetalleReparacionForm(forms.ModelForm):
@@ -62,7 +69,7 @@ class ReparacionForm(forms.ModelForm):
         fields = ["maquina", "fecha", "mano_obra", "observaciones"]
         widgets = {
             "maquina": forms.Select(attrs={"class": "form-control"}),
-            "fecha": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "fecha": forms.DateInput(attrs={"type": "date"}),
             "mano_obra": forms.NumberInput(attrs={"class": "form-control"}),
             "observaciones": forms.Textarea(attrs={"rows": 3, "class": "form-control"}),
         }

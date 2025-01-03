@@ -1,38 +1,106 @@
-{% extends "base.html" %}
-{% block content %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Máquina</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #007bff;
+            padding: 10px;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 10px;
+            display: inline-block;
+        }
+        nav a:hover {
+            background-color: #0056b3;
+            border-radius: 5px;
+        }
         .form-container {
             margin: 20px auto;
             padding: 20px;
-            background-color: #fff;
+            background-color: #ffffff;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             max-width: 600px;
+            text-align: center;
         }
         h1 {
             color: #444;
-            text-align: center;
+            margin-bottom: 5px;
         }
-        form input, form button {
+        .client-name {
+            font-size: 40px;
+            color: #007bff; /* Color azul para destacar el nombre */
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-decoration: underline;
+        }
+        form input, form select, form button {
             margin-bottom: 15px;
             width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        form button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #0056b3;
+        }
+        .form-group {
+            text-align: left;
+        }
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
         }
     </style>
 </head>
 <body>
+    <nav>
+        <a href="{% url 'inicio' %}">Inicio</a>
+        <a href="{% url 'lista_clientes' %}">Clientes</a>
+        <a href="{% url 'lista_maquinas' %}">Máquinas</a>
+        <a href="{% url 'lista_reparaciones' %}">Reparaciones</a>
+    </nav>
     <div class="form-container">
-        <h1>Registrar Máquina</h1>
+        <h1>Registrar Máquina para</h1>
+        <div class="client-name">{{ cliente.nombre }} {{ cliente.apellido }}</div>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Registrar</button>
+            <div class="form-group">
+                {{ maquina_form.non_field_errors }}
+                {% for field in maquina_form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="error">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="submit">Agregar Máquina</button>
         </form>
     </div>
 </body>
 </html>
-{% endblock %}

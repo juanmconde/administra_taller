@@ -29,7 +29,7 @@ class Maquina(models.Model):
     id_unico = models.CharField(max_length=255, unique=True, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.maquina} ({self.id_unico})"
+        return f"{self.maquina} ({self.fecha_entrada})"
     
     def problema_corto(self):
         return self.problema[:50] + "..." if len(self.problema) > 50 else self.problema
@@ -38,7 +38,7 @@ class Reparacion(models.Model):
     id_unico = models.CharField(max_length=20, unique=True, blank=True, null=True) # Nuevo
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     maquina = models.ForeignKey(Maquina, on_delete=models.CASCADE)
-    fecha = models.DateField()
+    fecha = models.DateField(default=date.today)
     mano_obra = models.DecimalField(max_digits=10, decimal_places=2)
     observaciones = models.TextField()
     # Si tienes más campos, agrégalos aquí

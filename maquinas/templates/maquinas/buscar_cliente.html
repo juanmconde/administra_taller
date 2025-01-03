@@ -13,36 +13,18 @@
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            max-width: 90%;
+            max-width: 50%;
         }
         h1 {
             color: #444;
             text-align: center;
         }
-        .btn-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .btn {
-            padding: 8px 15px;
-            color: #fff;
-            background-color: #0056b3;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: background-color 0.3s ease;
-        }
-        .btn:hover {
-            background-color: #003d80;
-        }
         input[type="text"] {
             padding: 10px;
-            width: 20%;
-            border: 1px solid #ddd;
+            width: 50%;
+            border: 1px solid #ccc;
             border-radius: 5px;
-            margin-bottom: 15px;
+            margin-right: 10px;
         }
         table {
             width: 100%;
@@ -57,15 +39,6 @@
         table th {
             background-color: #f2f2f2;
         }
-        table th.nombre, table td.nombre {
-            width: 5%;
-        }
-        table th.telefono, table td.telefono {
-            width: 2%;
-        }
-        table th.acciones, table td.acciones {
-            width: 5%;
-        }
     </style>
 </head>
 <body>
@@ -73,25 +46,25 @@
         <h1>Buscar Cliente</h1>
         <form method="get" style="text-align: center;">
             <input type="text" name="q" placeholder="Buscar por nombre, apellido o teléfono" value="{{ query }}">
-            <button type="submit" class="btn">Buscar</button>
+            <button type="submit" class="nav-button">Buscar</button>
         </form>
 
         <table>
             <thead>
                 <tr>
-                    <th class="nombre">Nombre</th>
-                    <th class="telefono">Teléfono</th>
-                    <th class="acciones">Acciones</th>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {% for cliente in clientes %}
                 <tr>
-                    <td class="nombre">{{ cliente.nombre }} {{ cliente.apellido }}</td>
-                    <td class="telefono">{{ cliente.telefono }}</td>
-                    <td class="acciones">
-                        <a href="{% url 'registrar_reparacion' cliente.pk %}" class="btn">Reparar</a>
-                        <a href="{% url 'eliminar_cliente' cliente.pk %}" class="btn" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">Eliminar</a>
+                    <td>{{ cliente.nombre }} {{ cliente.apellido }}</td>
+                    <td>{{ cliente.telefono }}</td>
+                    <td>
+                        <a href="{% url 'registrar_reparacion' cliente.pk %}" class="nav-button">Reparar</a>
+                        <a href="{% url 'eliminar_cliente' cliente.pk %}" class="nav-button" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">Eliminar</a>
                     </td>
                 </tr>
                 {% empty %}

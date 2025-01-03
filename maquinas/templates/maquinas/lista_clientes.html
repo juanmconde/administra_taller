@@ -32,26 +32,6 @@
         table th {
             background-color: #f2f2f2;
         }
-        table th.nombre, table td.nombre {
-            width: 5%; /* Ajusta el ancho para nombre */
-        }
-        table th.apellido, table td.apellido {
-            width: 5%; /* Ajusta el ancho para apellido */
-        }
-        table th.telefono, table td.telefono {
-            width: 3%; /* Ajusta el ancho para teléfono */
-        }
-        table th.maquinas, table td.maquinas {
-            width: 10%; /* Ajusta el ancho para máquinas */
-        }
-        table th.acciones, table td.acciones {
-            width: 10%; /* Ajusta el ancho para acciones */
-        }
-        .action-buttons {
-            display: flex;
-            flex-wrap: wrap; /* Permite que los botones se acomoden si hay poco espacio */
-            gap: 5px;
-        }
         .btn {
             padding: 8px 15px;
             color: #fff;
@@ -64,6 +44,12 @@
         }
         .btn:hover {
             background-color: #003d80;
+        }
+        .btn-eliminar {
+            background-color: #dc3545; /* Rojo */
+        }
+        .btn-eliminar:hover {
+            background-color: #a71d2a; /* Rojo oscuro */
         }
         .btn-container {
             margin-bottom: 15px;
@@ -83,7 +69,7 @@
     <div class="table-container">
         <h1>Lista de Clientes</h1>
         <div class="btn-container">
-            <a href="{% url 'registrar_cliente' %}" class="btn">Registrar Nuevo Cliente</a>
+            <a href="{% url 'registrar_cliente' %}" class="nav-button">Registrar Nuevo Cliente</a>
         </div>
         <table>
             <thead>
@@ -112,10 +98,10 @@
                     </td>
                     <td class="acciones">
                         <div class="action-buttons">
-                            <a href="{% url 'registrar_maquina' cliente.pk %}" class="btn">Agregar</a>
-                            <a href="{% url 'editar_cliente' cliente.pk %}" class="btn">Editar</a>
-                            <a href="{% url 'registrar_reparacion' cliente.pk %}" class="btn">Reparar</a>
-                            <a href="{% url 'eliminar_cliente' cliente.pk %}" class="btn eliminar" onclick="return confirm('¿Seguro que deseas eliminar este cliente?');">Eliminar</a>
+                            <a href="{% url 'registrar_maquina' cliente.pk %}" class="nav-button">Agregar</a>
+                            <a href="{% url 'editar_cliente' cliente.pk %}" class="nav-button">Editar</a>
+                            <a href="{% url 'registrar_reparacion' cliente.pk %}" class="nav-button">Reparar</a>
+                            <a href="{% url 'eliminar_cliente' cliente.pk %}" class="btn btn-eliminar" onclick="return confirm('¿Seguro que deseas eliminar este cliente?');">Eliminar</a>
                         </div>
                     </td>
                 </tr>

@@ -17,6 +17,11 @@ class Cliente(models.Model):
         return f"{self.nombre} {self.apellido} ({self.telefono})"
 
 class Maquina(models.Model):
+    ESTADOS = [
+        ('pendiente', 'Pendiente'),
+        ('reparada', 'Reparada'),
+    ]
+
     cliente = models.ForeignKey(
         Cliente,
         on_delete=models.CASCADE,
@@ -27,12 +32,14 @@ class Maquina(models.Model):
     problema = models.TextField()
     fecha_entrada = models.DateField(default=date.today)
     id_unico = models.CharField(max_length=255, unique=True, null=True, blank=True)
+    estado = models.CharField(max_length=10, choices=ESTADOS, default='pendiente')  # Nuevo campo
 
     def __str__(self):
         return f"{self.maquina} ({self.fecha_entrada})"
-    
+
     def problema_corto(self):
         return self.problema[:50] + "..." if len(self.problema) > 50 else self.problema
+
 
 class Reparacion(models.Model):
     id_unico = models.CharField(max_length=20, unique=True, blank=True, null=True) # Nuevo

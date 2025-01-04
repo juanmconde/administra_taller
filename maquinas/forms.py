@@ -47,20 +47,27 @@ class DetalleReparacionForm(forms.ModelForm):
     class Meta:
         model = DetalleReparacion
         fields = ["cantidad", "descripcion", "precio"]
+        widgets = {
+            "descripcion": forms.TextInput(attrs={"placeholder": "Escribe la descripción..."}),  # Placeholder
+        }
+
+    def clean_descripcion(self):
+        descripcion = self.cleaned_data.get("descripcion", "").strip()
+        if not descripcion:  # Validación personalizada para evitar descripciones vacías
+            raise forms.ValidationError("La descripción no puede estar vacía.")
+        return descripcion
 
     def clean(self):
         cleaned_data = super().clean()
-        descripcion = cleaned_data.get("descripcion")
         cantidad = cleaned_data.get("cantidad")
         precio = cleaned_data.get("precio")
 
-        if not descripcion:
-            raise forms.ValidationError("La descripción no puede estar vacía.")
         if not cantidad or cantidad <= 0:
             raise forms.ValidationError("La cantidad debe ser mayor a 0.")
         if not precio or precio <= 0:
             raise forms.ValidationError("El precio debe ser mayor a 0.")
         return cleaned_data
+
 
 # Formulario para Reparacion
 class ReparacionForm(forms.ModelForm):

@@ -95,29 +95,47 @@ def registrar_cliente_maquina(request):
 
 def registrar_reparacion(request, cliente_id):
     cliente = get_object_or_404(Cliente, id=cliente_id)
+    maquinas = cliente.maquinas.filter(estado="pendiente")
+
+    fecha_actual = date.today()  # Obtener la fecha actual
+
     if request.method == "POST":
-        reparacion_form = ReparacionForm(request.POST, cliente=cliente)
-        detalle_formset = DetalleReparacionFormSet(request.POST)
-        
+        reparacion_form = ReparacionForm(request.POST)
+        detalle_formset = DetalleReparacionFormSet(request.POST, instance=None)
+
         if reparacion_form.is_valid() and detalle_formset.is_valid():
             reparacion = reparacion_form.save(commit=False)
             reparacion.cliente = cliente
             reparacion.save()
-            
+
             detalle_formset.instance = reparacion
             detalle_formset.save()
-            
-            return redirect('lista_reparaciones')
+
+            # Actualizar el estado de la máquina
+            maquina_id = request.POST.get("maquina_id")
+            maquina = get_object_or_404(Maquina, id=maquina_id)
+            maquina.estado = "reparada"
+            maquina.save()
+
+            messages.success(request, "Reparación registrada exitosamente.")
+            return redirect("lista_reparaciones")
     else:
-        reparacion_form = ReparacionForm(cliente=cliente)
+        reparacion_form = ReparacionForm(initial={"fecha": fecha_actual})
         detalle_formset = DetalleReparacionFormSet()
 
-    return render(request, "maquinas/registrar_reparacion.html", {
-        "cliente": cliente,
-        "reparacion_form": reparacion_form,
-        "detalle_formset": detalle_formset,
-    })
-    
+    return render(
+        request,
+        "maquinas/registro_reparacion.html",
+        {
+            "cliente": cliente,
+            "maquinas": maquinas,
+            "reparacion_form": reparacion_form,
+            "detalle_formset": detalle_formset,
+            "fecha_actual": fecha_actual,
+        },
+    )
+
+
 def acciones_cliente(request, cliente_id):
     cliente = get_object_or_404(Cliente, id=cliente_id)
     return render(request, "acciones_cliente.html", {"cliente": cliente})
@@ -137,8 +155,9 @@ def inicio(request):
 
 
 def lista_maquinas(request):
-    maquinas = Maquina.objects.all()
+    maquinas = Maquina.objects.filter(estado='pendiente')  # Mostrar solo máquinas pendientes
     return render(request, "maquinas/lista_maquinas.html", {"maquinas": maquinas})
+
 
 def registrar_cliente(request):
     cliente = None

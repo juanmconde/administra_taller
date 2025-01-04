@@ -12,27 +12,210 @@
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
+            max-width: 800px;
+            text-align: center;
         }
         h1 {
             color: #444;
             text-align: center;
         }
-        form input, form button {
-            margin-bottom: 15px;
+        .cliente-nombre {
+            text-align: center;
+            font-size: 35px;
+            font-weight: bold;
+            color: #0056b3;
+            margin-bottom: 10px;
+        }
+        table {
             width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        table th {
+            background-color: #f2f2f2;
+        }
+        .btn {
+            margin: 5px 0;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .form-group {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group select, .form-group input, .form-group textarea {
+            width: 40%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .totales-container {
+            text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <h1>Registrar Reparación</h1>
+        <!-- Nombre del cliente resaltado -->
+        <div class="cliente-nombre">
+            {{ cliente.nombre }} {{ cliente.apellido }}
+        </div>
+        
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Registrar</button>
+            
+            <!-- Selección de la máquina -->
+            <fieldset>
+                <legend>Seleccionar Máquina</legend>
+                <div class="form-group">
+                    <label for="maquina_id">Máquina</label>
+                    <select name="maquina_id" id="maquina_id" required>
+                        <option value="" disabled selected>Selecciona una máquina</option>
+                        {% for maquina in maquinas %}
+                        <option value="{{ maquina.id }}">{{ maquina.maquina }} - {{ maquina.problema }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </fieldset>
+
+            <!-- Información de la reparación -->
+            <fieldset>
+                <legend>Información de la Reparación</legend>
+                <div class="form-group">
+                    <label for="fecha">Fecha</label>
+                    <input type="date" name="fecha" id="fecha" value="{{ reparacion_form.initial.fecha|default_if_none:fecha_actual }}" required>
+                </div>
+            </fieldset>
+
+            <!-- Detalles de la reparación -->
+            <fieldset>
+                <legend>Detalles de Reparación</legend>
+                <table id="detalles-reparacion">
+                    <thead>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Subtotal</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ detalle_formset.management_form }}
+                        {% for form in detalle_formset %}
+                        <tr>
+                            <td><input type="number" name="{{ form.cantidad.name }}" value="{{ form.cantidad.value }}" min="1" required /></td>
+                            <td>
+                                <input 
+                                    type="text" 
+                                    name="{{ form.descripcion.name }}" 
+                                    value="{{ form.descripcion.value|default:'' }}" 
+                                    placeholder="Escribe la descripción..." 
+                                    required 
+                                />
+                            </td>
+                            <td><input type="number" name="{{ form.precio.name }}" value="{{ form.precio.value }}" step="1" required /></td>
+                            <td class="subtotal">$0</td>
+                            <td><button type="button" class="btn eliminar">Eliminar</button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button type="button" id="add-row" class="btn">Añadir Detalle</button>
+            </fieldset>
+
+            <!-- Campo de mano de obra -->
+            <div class="form-group">
+                <label for="mano_obra">Mano de Obra</label>
+                <input type="number" name="mano_obra" id="mano_obra" step="1" required>
+            </div>
+
+            <!-- Observaciones -->
+            <fieldset>
+                <legend>Observaciones</legend>
+                <div class="form-group">
+                    <textarea name="observaciones" rows="4" placeholder="Añade observaciones aquí..."></textarea>
+                </div>
+            </fieldset>
+
+            <!-- Totales -->
+            <div class="totales-container">
+                <p><strong>TOTAL: <span id="total-general">$0</span></strong></p>
+            </div>
+
+            <button type="submit" class="btn">Guardar Reparación</button>
         </form>
     </div>
+
+    <script>
+        function calculateTotals() {
+            let totalRepuestos = 0;
+            document.querySelectorAll("#detalles-reparacion tbody tr").forEach(row => {
+                const cantidad = parseFloat(row.querySelector("[name$='-cantidad']").value) || 0;
+                const precio = parseFloat(row.querySelector("[name$='-precio']").value) || 0;
+                const subtotal = Math.round(cantidad * precio);
+                row.querySelector(".subtotal").textContent = `$${subtotal}`;
+                totalRepuestos += subtotal;
+            });
+
+            const manoObra = Math.round(parseFloat(document.getElementById("mano_obra").value) || 0);
+
+            const totalGeneral = Math.round(totalRepuestos + manoObra);
+            document.getElementById("total-general").textContent = `$${totalGeneral}`;
+        }
+
+        document.querySelectorAll("#detalles-reparacion input").forEach(input => {
+            input.addEventListener("input", calculateTotals);
+        });
+
+        document.getElementById("add-row").addEventListener("click", function () {
+            const tableBody = document.querySelector("#detalles-reparacion tbody");
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td><input type="number" name="cantidad" value="1" min="1" required /></td>
+                <td><input type="text" name="descripcion" placeholder="Escribe la descripción..." required /></td>
+                <td><input type="number" name="precio" step="1" required /></td>
+                <td class="subtotal">$0</td>
+                <td><button type="button" class="btn eliminar">Eliminar</button></td>
+            `;
+            tableBody.appendChild(newRow);
+            newRow.querySelector(".eliminar").addEventListener("click", function () {
+                newRow.remove();
+                calculateTotals();
+            });
+            calculateTotals();
+        });
+
+        document.querySelectorAll(".eliminar").forEach(button => {
+            button.addEventListener("click", function () {
+                button.closest("tr").remove();
+                calculateTotals();
+            });
+        });
+
+        calculateTotals();
+    </script>
 </body>
 </html>
 {% endblock %}
